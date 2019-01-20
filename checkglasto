@@ -1,0 +1,40 @@
+#!/bin/sh
+
+tempLoc=/tmp/new.glasto
+saveLoc=./lineup.glasto
+scraperLoc=./main.py
+
+# run the scraper
+echo 'checking eFestivals for glasto lineup news'
+python3 $scraperLoc > $tempLoc
+
+# check if save file exists
+if [ ! -f $saveLoc ]; then
+    echo "no existing save found, making an empty one";
+    echo "empty save" > $saveLoc
+fi
+
+# check for diff, quit if none ele prompt user to view
+if cmp -s $tempLoc $saveLoc
+then
+    echo "no changes :(";
+    exit;
+else
+    echo "there are some changes!";
+fi
+
+read -p 'view diff? (Y/n) ' yn
+case $yn in
+    n ) ;;
+    * ) opendiff $saveLoc $tempLoc
+esac
+
+# ask if we should save changes
+read -p 'save updated list? (y/N) ' yn
+case $yn in
+    y ) cp $tempLoc $saveLoc; echo 'saved';;
+    * ) echo 'not saved';;
+esac
+
+# tidy up
+rm $tempLoc

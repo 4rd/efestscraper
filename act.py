@@ -19,4 +19,4 @@ class Act:
         self.status = status
         
     def __str__(self):
-        return "{}, {}, {}, {}".format(self.name, self.stage, self.day, self.status)
+        return "{},{},{},{}".format(self.name, self.stage, self.day, self.status)
